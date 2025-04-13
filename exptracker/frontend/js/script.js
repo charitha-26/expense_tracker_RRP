@@ -1,94 +1,82 @@
-// script.js
 let transactions = JSON.parse(localStorage.getItem('transactions')) || [];
 let currentBalance = parseFloat(localStorage.getItem('currentBalance')) || 0;
 
 document.addEventListener('DOMContentLoaded', () => {
-    if (!localStorage.getItem('loggedIn')) return;
-    document.getElementById('appContainer').style.display = 'block';
+    if (!localStorage.getItem('loggedIn')) window.location.href = 'login.html';
     
-    // Initialize UI
     updateBalanceDisplay();
     document.getElementById('transactionDate').valueAsDate = new Date();
     
-    // Set balance button
     document.getElementById('setBalanceBtn').addEventListener('click', setInitialBalance);
-
-    // Transaction form
-    document.getElementById('transactionForm').addEventListener('submit', addTransaction);
-
-    // Delete transaction handler (event delegation)
-    document.getElementById('transactionsTable').addEventListener('click', handleDelete);
-
-    // Logout
+    document.getElementById('addExpense').addEventListener('click', () => addTransaction('Expense'));
+    document.getElementById('addDeposit').addEventListener('click', () => addTransaction('Deposit'));
+    document.getElementById('clearAll').addEventListener('click', clearAll);
     document.getElementById('logoutBtn').addEventListener('click', logout);
 
-    // Initial table load
+    document.getElementById('transactionsTable').addEventListener('click', handleTableActions);
+
     updateTable();
 });
 
 function setInitialBalance() {
     const balanceInput = parseFloat(document.getElementById('initialBalance').value);
-    if (!isNaN(balanceInput)) {
+    if (!isNaN(balanceInput) && balanceInput >= 0) {
         currentBalance = balanceInput;
         localStorage.setItem('currentBalance', currentBalance);
         updateBalanceDisplay();
         document.getElementById('initialBalance').value = '';
     } else {
-        alert('Please enter a valid amount!');
+        alert('Please enter a valid positive amount!');
     }
 }
 
-function addTransaction(e) {
-    e.preventDefault();
-    
-    const amount = parseFloat(document.getElementById('amount').value);
+function addTransaction(type) {
+    const amountField = type === 'Expense' ? 'expenseAmount' : 'depositAmount';
+    const amount = parseFloat(document.getElementById(amountField).value);
     const date = document.getElementById('transactionDate').value;
     const category = document.getElementById('category').value;
-    const type = document.getElementById('transactionType').value;
-    
-    if (!amount || !date || !category) {
-        alert('Please fill all fields!');
+
+    if (!amount || amount <= 0 || !date || !category) {
+        alert('Please enter a valid amount greater than 0 and fill all fields!');
         return;
     }
-    
-    // Create transaction
+
     const transaction = {
         id: Date.now(),
         type,
-        amount: type === 'Deposit' ? amount : -amount,
+        amount: type === 'Expense' ? -amount : amount, // Expense subtracts, Deposit adds
         category,
         date
     };
-    
-    // Update balance
+
     currentBalance += transaction.amount;
-    
-    // Save data
     transactions.push(transaction);
     saveData();
-    
-    // Update UI
+
     updateTable();
     updateBalanceDisplay();
-    this.reset();
-    document.getElementById('transactionDate').valueAsDate = new Date();
+    document.getElementById(amountField).value = '';
 }
 
-function handleDelete(e) {
+function clearAll() {
+    if (confirm('Are you sure you want to clear all transactions?')) {
+        transactions = [];
+        currentBalance = 0;
+        saveData();
+        updateTable();
+        updateBalanceDisplay();
+    }
+}
+
+function handleTableActions(e) {
     if (e.target.classList.contains('delete-btn')) {
         if (confirm('Are you sure you want to delete this transaction?')) {
             const transactionId = parseInt(e.target.dataset.id);
             const transactionIndex = transactions.findIndex(t => t.id === transactionId);
-            
             if (transactionIndex > -1) {
-                // Update balance
-                currentBalance -= transactions[transactionIndex].amount;
-                
-                // Remove transaction
-                transactions.splice(transactionIndex, 1);
+                currentBalance -= transactions[transactionIndex].amount; // Adjust balance
+                transactions.splice(transactionIndex, 1); // Remove transaction
                 saveData();
-                
-                // Update UI
                 updateTable();
                 updateBalanceDisplay();
             }
@@ -98,19 +86,21 @@ function handleDelete(e) {
 
 function logout() {
     localStorage.removeItem('loggedIn');
-    window.location.reload();
+    window.location.href = 'login.html';
 }
 
 function updateBalanceDisplay() {
-    const balanceElement = document.getElementById('currentBalance');
-    balanceElement.textContent = `₹${currentBalance.toFixed(2)}`;
-    balanceElement.className = currentBalance >= 0 ? 'deposit' : 'expense';
+    const balanceElement = document.querySelector('#currentBalanceDisplay .balance-value');
+    if (balanceElement) {
+        balanceElement.textContent = `₹${currentBalance.toFixed(2)}`;
+        balanceElement.className = `balance-value ${currentBalance >= 0 ? 'deposit' : 'expense'}`;
+    }
 }
 
 function updateTable() {
     const tbody = document.getElementById('transactionsTable').querySelector('tbody');
     tbody.innerHTML = '';
-    
+
     transactions.forEach(transaction => {
         const row = document.createElement('tr');
         row.innerHTML = `
