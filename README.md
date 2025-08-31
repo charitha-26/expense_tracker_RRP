@@ -10,7 +10,7 @@ This is a Spring Boot-based Expense Tracker application designed to help users m
 - Export reports as PDF or Excel
 - User settings and preferences
 - Support ticket management
-- Responsive UI (Thymeleaf / React)
+- Responsive UI 
 
 ## Technologies Used
 
@@ -34,7 +34,7 @@ This is a Spring Boot-based Expense Tracker application designed to help users m
 ### Setup
 
 1. Clone the repository:
-    git clone https://gitlab.com/srikeerthana_05/expense_tracker.git
+    git clone https://gitlab.com/charitha-26/expense_tracker.git
     cd expense_tracker
 
 2. Configure your database in `src/main/resources/application.properties`:
