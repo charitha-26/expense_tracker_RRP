@@ -1,0 +1,123 @@
+/* Global Styles */
+body {
+  background-color: #212529;
+  color: white;
+}
+
+h4,
+h5 {
+  font-family: "Arial", sans-serif;
+  font-weight: 500;
+}
+
+.card {
+  border-radius: 8px;
+}
+
+.card.bg-secondary {
+  background-color: #343a40;
+}
+
+.card.bg-dark {
+  background-color: #23272b;
+}
+
+.nav-link {
+  color: #ccc !important;
+  text-transform: uppercase;
+}
+
+.nav-link:hover {
+  color: #f8f9fa !important;
+}
+
+button.btn-outline-light {
+  color: white;
+  border-color: white;
+  transition: all 0.3s ease;
+}
+
+button.btn-outline-light:hover {
+  background-color: #495057;
+  border-color: #495057;
+}
+
+.table-dark {
+  background-color: #343a40;
+}
+
+.table-dark th,
+.table-dark td {
+  color: #ccc;
+}
+
+.table-striped tbody tr:nth-of-type(odd) {
+  background-color: #3a3f44;
+}
+
+/* Form Styling */
+input,
+select {
+  background-color: #495057;
+  border: none;
+  color: white;
+}
+
+input:focus,
+select:focus {
+  border-color: #495057;
+  box-shadow: none;
+}
+
+/* Button Styling */
+.btn-success {
+  background-color: #28a745;
+  border-color: #28a745;
+}
+
+.btn-primary {
+  background-color: #007bff;
+  border-color: #007bff;
+}
+
+.btn-success:hover {
+  background-color: #218838;
+  border-color: #1e7e34;
+}
+
+.btn-primary:hover {
+  background-color: #0056b3;
+  border-color: #004085;
+}
+
+/* Chart Styling */
+canvas {
+  max-width: 100% !important;
+  height: auto !important;
+}
+
+/* Category Scroll Styling */
+.category-scroll {
+  max-height: 150px;
+  overflow-y: auto;
+}
+
+.category-scroll .list-group-item {
+  background-color: #495057;
+  color: white;
+  border: none;
+}
+
+.category-scroll .list-group-item:hover {
+  background-color: #343a40;
+}
+
+/* Transactions Table */
+#transactions-table td,
+#transactions-table th {
+  font-size: 0.875rem;
+}
+
+.content-page {
+  display: none;
+}
